@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070d19">
+  <meta name="description" content="ARIO Obfuscator — browser-based Lua and Luau transformation workbench.">
+  <title>ARIO Obfuscator — Script Protection Studio</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/lexer.js"></script>
+  <script defer src="js/transform.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+<div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="ARIO Obfuscator home"><span class="brand-mark">A</span><span><b>ARIO <em>OBFUSCATOR</em></b><small>LUA / LUAU WORKBENCH</small></span></a>
+  <nav class="topnav"><span class="online-dot"></span><span>LOCAL PROCESSING</span><button id="themeBtn" class="icon-btn" title="Toggle accent" aria-label="Toggle accent">◐</button><a class="github-link" href="https://github.com/" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
+</header>
+<main class="shell">
+  <section class="hero">
+    <div><div class="eyebrow"><span class="spark">✦</span> SCRIPT PROTECTION STUDIO</div><h1>Code in. <span>ARIO out.</span></h1><p>A polished, browser-only Lua/Luau workbench with configurable transformations, profiles, analysis and export tools.</p>
+      <div class="hero-pills"><span>🔒 No code uploads</span><span>⚡ Instant preview</span><span>📱 Mobile ready</span></div>
+    </div>
+    <div class="hero-orb"><div class="orb-core">A</div><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orb-caption">ARIO ENGINE <b>01</b></span></div>
+  </section>
+
+  <div class="app-grid">
+    <section class="main-column">
+      <div class="toolbar card">
+        <div class="toolbar-left"><div class="mode-switch"><button class="mode active" data-mode="lua">Lua</button><button class="mode" data-mode="luau">Luau</button></div><span class="separator"></span><span class="muted small" id="editorModeText">Lua-compatible token transforms</span></div>
+        <div class="toolbar-right"><button class="btn btn-ghost" id="openFileBtn">↥ Import .lua</button><input type="file" id="fileInput" accept=".lua,.luau,.txt" hidden><button class="btn btn-ghost" id="sampleBtn">Load sample</button></div>
+      </div>
+      <div class="editor-grid">
+        <section class="editor-card card">
+          <div class="editor-title"><div><span class="step">01</span><b>Source code</b><span class="live-tag">INPUT</span></div><button class="mini-btn" id="clearSource">Clear</button></div>
+          <div class="code-area"><div class="line-gutter" id="inputGutter">1</div><textarea id="source" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Source Lua code" placeholder="-- Paste your Lua / Luau code here&#10;local message = &quot;Hello ARIO&quot;&#10;print(message)"></textarea></div>
+          <div class="editor-status"><span id="sourceStats">0 lines · 0 chars</span><span id="cursorInfo">Ln 1, Col 1</span></div>
+        </section>
+        <section class="editor-card card">
+          <div class="editor-title"><div><span class="step">02</span><b>Protected output</b><span class="live-tag output-tag">OUTPUT</span></div><button class="mini-btn" id="copyBtn">Copy ⧉</button></div>
+          <div class="code-area output-area"><div class="line-gutter" id="outputGutter">—</div><textarea id="output" spellcheck="false" readonly aria-label="Transformed Lua output" placeholder="Your output appears here after you run ARIO."></textarea></div>
+          <div class="editor-status"><span id="outputStats">Waiting for input</span><span id="outputDialect">Lua / Luau</span></div>
+        </section>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-primary btn-run" id="obfuscateBtn"><span>✦</span> OBFUSCATE CODE <kbd>Ctrl ↵</kbd></button>
+        <button class="btn btn-secondary" id="downloadBtn">↓ Download .lua</button>
+        <button class="btn btn-secondary" id="compareBtn">⇄ Compare sizes</button>
+        <button class="btn btn-secondary" id="resetBtn">↺ Reset</button>
+      </div>
+      <div id="notice" class="notice" role="status"><span class="notice-icon">✦</span><span id="noticeText">Ready. Choose a profile, adjust settings, and run the transformation.</span></div>
+      <section id="sizePanel" class="size-panel card hidden">
+        <div class="panel-heading"><div><span class="eyebrow">OUTPUT REPORT</span><h2>Transformation summary</h2></div><button class="mini-btn" id="closeReport">Close</button></div>
+        <div class="report-grid"><div><span>Source size</span><b id="reportIn">0 B</b></div><div><span>Output size</span><b id="reportOut">0 B</b></div><div><span>Size change</span><b id="reportChange">—</b></div><div><span>Elapsed</span><b id="reportTime">—</b></div></div>
+        <p class="muted small" id="reportNote">A larger output does not necessarily mean stronger protection.</p>
+      </section>
+    </section>
+
+    <aside class="side-column">
+      <section class="card side-card">
+        <div class="side-heading"><div><span class="side-icon">⚙</span><div><h2>Engine settings</h2><p>Choose what to transform</p></div></div><span class="tiny-badge">V1.5</span></div>
+        <label class="field-label" for="profile">Protection profile</label>
+        <select id="profile" class="select"><option value="balanced">Balanced · recommended</option><option value="compact">Compact output</option><option value="strings">String transformation</option><option value="custom">Custom settings</option></select>
+        <div class="setting-list">
+          <label class="setting"><span class="check-wrap"><input id="minify" type="checkbox" checked><i></i></span><span class="setting-copy"><b>Minify whitespace</b><small>Remove unnecessary spaces and comments.</small></span><span class="setting-level">SAFE*</span></label>
+          <label class="setting"><span class="check-wrap"><input id="strings" type="checkbox" checked><i></i></span><span class="setting-copy"><b>Transform strings</b><small>Rewrite simple quoted strings with string.char.</small></span><span class="setting-level">MED</span></label>
+          <label class="setting"><span class="check-wrap"><input id="numbers" type="checkbox"><i></i></span><span class="setting-copy"><b>Transform integers</b><small>Rewrite simple decimal integer literals.</small></span><span class="setting-level">LOW</span></label>
+          <label class="setting"><span class="check-wrap"><input id="rename" type="checkbox"><i></i></span><span class="setting-copy"><b>Rename local names</b><small>Experimental scope-aware-ish token rewrite.</small></span><span class="setting-level">RISK</span></label>
+          <label class="setting"><span class="check-wrap"><input id="comments" type="checkbox" checked><i></i></span><span class="setting-copy"><b>Strip comments</b><small>Remove comments outside strings.</small></span><span class="setting-level">SAFE*</span></label>
+        </div>
+        <div class="field-row"><div><label class="field-label" for="stringStyle">String style</label><select id="stringStyle" class="select"><option value="char">string.char()</option><option value="concat">Chunked string.char()</option></select></div><div><label class="field-label" for="nameLength">Name length</label><select id="nameLength" class="select"><option value="6">Short</option><option value="10" selected>Balanced</option><option value="16">Long</option></select></div></div>
+        <button class="btn btn-outline full" id="applyProfile">Apply selected profile</button>
+        <p class="micro-note">*Safe means usually syntax-preserving, not guaranteed. This tool does not parse every Lua/Luau feature.</p>
+      </section>
+      <section class="card side-card">
+        <div class="side-heading"><div><span class="side-icon">⌁</span><div><h2>Code analysis</h2><p>Quick static checks</p></div></div></div>
+        <div class="analysis-list"><div><span>Lines</span><b id="analysisLines">0</b></div><div><span>Identifiers</span><b id="analysisIds">0</b></div><div><span>String literals</span><b id="analysisStrings">0</b></div><div><span>Comments</span><b id="analysisComments">0</b></div></div>
+        <div class="analysis-message" id="analysisMessage">Paste source code to see basic token statistics.</div>
+      </section>
+      <section class="card side-card">
+        <div class="side-heading"><div><span class="side-icon">♧</span><div><h2>Project tools</h2><p>Manage your local work</p></div></div></div>
+        <div class="tool-buttons"><button class="btn btn-ghost full" id="saveProject">↓ Save settings JSON</button><button class="btn btn-ghost full" id="loadSettings">↥ Load settings JSON</button><input id="settingsFile" type="file" accept=".json,application/json" hidden></div>
+        <p class="micro-note">Settings export contains only options, never your source code.</p>
+      </section>
+    </aside>
+  </div>
+  <footer><div class="footer-brand"><span class="brand-mark small-mark">A</span><span>ARIO OBFUSCATOR</span></div><span>Client-side static app · GitHub Pages compatible</span><span class="footer-warning">Obfuscation ≠ encryption or irreversible protection.</span></footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+</body>
+</html>
